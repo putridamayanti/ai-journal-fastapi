@@ -1,15 +1,14 @@
 from sqlalchemy import Column, String, DateTime
 from datetime import datetime
 
-from database.database import Base
+from sqlmodel import SQLModel, Field
 
 
-class Mood(Base):
+class Mood(SQLModel, table=True):
     __tablename__ = "moods"
 
-    id = Column(String, primary_key=True, index=True)
-    mood = Column(String, nullable=False)
-    date = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.now())
-    updated_at = Column(DateTime, default=datetime.now(), onupdate=datetime.now())
-
+    id: str | None = Field(default=None, primary_key=True)
+    mood: str = Field(default=None, nullable=False)
+    date: datetime = Field(default=None, nullable=False)
+    created_at: datetime = Field(default=None, nullable=False)
+    updated_at: datetime = Field(default=None, nullable=False)

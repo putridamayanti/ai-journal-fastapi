@@ -17,3 +17,7 @@ class Diary(BaseModel):
 class DiaryCreate(SQLModel):
     title: str | None = None
     content: str
+
+class DiaryListResponse:
+    total: int
+    items: list[Diary]

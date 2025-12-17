@@ -5,7 +5,9 @@ from fastapi import APIRouter
 
 import services.mood
 from database.database import SessionDep
-from schemas.mood import Mood
+from libs.pagination import build_list_pagination_response
+from schemas.mood import Mood, MoodCreate
+from schemas.params import DefaultListParams
 
 router = APIRouter()
 
@@ -15,19 +17,42 @@ def create_mood(session: SessionDep, mood: Mood):
     mood.created_at = datetime.now()
     mood.updated_at = datetime.now()
 
-    result = services.mood.create_mood(session, mood)
+    mood = services.mood.create_mood(session, mood)
 
     return {
         "message": "Mood created successfully",
-        "data": result
+        "data": mood
     }
 
 @router.get("/", tags=["moods"])
-def list_moods(session: SessionDep):
-    moods = services.mood.list_moods(session)
+def list_moods(
+    session: SessionDep,
+    offset: int = 0,
+    limit: int = 100,
+    search: str | None = None,
+    order_by: str | None = "desc",
+    order: str | None = "created_at",
+):
+    params = DefaultListParams(
+        offset=offset,
+        limit=limit,
+        search=search,
+        order_by=order_by,
+        order=order
+    )
+    print(params)
+    moods, total_items = services.mood.list_moods(session, params)
+
+    result = build_list_pagination_response(
+        items=moods,
+        total_items=total_items,
+        offset=params.offset,
+        limit=params.limit
+    )
+
     return {
         "message": "Moods retrieved successfully",
-        "data": moods
+        "data": result
     }
 
 @router.get("/{mood_id}", tags=["moods"])
