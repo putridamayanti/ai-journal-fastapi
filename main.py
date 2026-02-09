@@ -7,20 +7,6 @@ from database.database import engine
 
 SQLModel.metadata.create_all(engine)
 
-# @contextmanager
-# def lifespan(app: FastAPI):
-#     print("Application start ...")
-#
-#     yield
-    # await init_db()
-    # print("Database connecting ...")
-    # # app.state.database_factory = async_session
-    #
-    # try:
-    #     yield
-    # finally:
-    #     print("Application shut down ...")
-
 def create_app() -> FastAPI:
     app_title = os.environ["APP_TITLE"]
     app_version = os.environ["APP_VERSION"]

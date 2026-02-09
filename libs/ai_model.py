@@ -17,3 +17,13 @@ def generate_title(content: str) -> str:
         output_ids = model.generate(**inputs, max_length=20, num_beams=5, early_stopping=True)
 
     return tokenizer.decode(output_ids[0], skip_special_tokens=True)
+
+def generate_prompt_question() -> str:
+    prompt = "Generate a thoughtful question for a daily diary entry."
+
+    inputs = tokenizer(prompt, return_tensors="pt")
+
+    with torch.no_grad():
+        output_ids = model.generate(**inputs, max_length=50, num_beams=5, early_stopping=True)
+
+    return tokenizer.decode(output_ids[0], skip_special_tokens=True)
